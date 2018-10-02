@@ -6,12 +6,18 @@ using System.Threading.Tasks;
 
 namespace Alga_Week_5_6
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            Console.ReadKey();
+            Console.WriteLine("Geef een 'x' en 'y'");
+
+            String input = Console.ReadLine();
+            string[] inputXY = input.Split(' ');
+            Dungeon dungeon = new Dungeon(int.Parse(inputXY[0]), int.Parse(inputXY[1]));
+
+
+            Console.ReadLine();
         }
     }
 }

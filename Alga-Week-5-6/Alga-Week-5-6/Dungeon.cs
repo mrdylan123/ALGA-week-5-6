@@ -10,5 +10,13 @@ namespace Alga_Week_5_6
     {
         private Room startRoom;
         private Room endRoom;
+
+
+        public Dungeon(int x, int y)
+        {
+
+        }
+
+
     }
 }

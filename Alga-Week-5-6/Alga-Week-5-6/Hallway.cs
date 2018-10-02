@@ -12,14 +12,25 @@ namespace Alga_Week_5_6
         private Room Entrance;
         private Room Exit;
         private Boolean isCollapsed;
+        private static readonly Random rnd;
 
-        public Hallway(int level, Room entrance, Room exit)
+        public Hallway(Room entrance, Room exit)
         {
-            this.EnemyLevel = level;
+            EnemyLevel = rnd.Next(10);
             this.Entrance = entrance;
             this.Exit = exit;
         }
 
-
+        public Room MoveThrough(Room currentRoom)
+        {
+            if (Entrance == currentRoom)
+            {
+                return Exit;
+            }
+            else
+            {
+                return Entrance;
+            }
+        }
     }
 }
