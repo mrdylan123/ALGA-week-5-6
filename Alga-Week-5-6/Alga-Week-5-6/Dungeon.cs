@@ -69,8 +69,18 @@ namespace Alga_Week_5_6
 
         public void Print()
         {
+            Console.WriteLine("S = Room: Startpunt");
+            Console.WriteLine("E = Room: Eindpunt");
+            Console.WriteLine("X = Room: Niet bezocht");
+            Console.WriteLine("* = Room: Bezocht");
+            Console.WriteLine("~ = Hallway: Ingesort");
+            Console.WriteLine("0 = Hallway: Level tegenstander (cost)");
+
+            Console.Write(Environment.NewLine);
+
             for (int y = 0; y < _height; y++)
             {
+                // Print rooms and horizontal hallways
                 for (int x = 0; x < _width; x++)
                 {
                     Room room = _rooms[x, y];
@@ -78,9 +88,35 @@ namespace Alga_Week_5_6
                     Hallway rightHallway =
                         room.AdjacentHallways.FirstOrDefault(h => h.OppositeRoom(room).X == room.X + 1);
 
-                    Console.Write($"-{room}-{rightHallway}");
+                    Console.Write($" - {room} - {rightHallway}");
                 }
+
                 Console.Write(Environment.NewLine);
+
+                // Print vertical hallways
+                if (y == _height - 1)
+                    break;
+
+                for (int hallwayY = 0; hallwayY < 3; hallwayY++)
+                {
+                    for (int x = 0; x < _width; x++)
+                    {
+                        if (hallwayY == 1)
+                        {
+                            Room room = _rooms[x, y];
+
+                            Hallway bottomHallway =
+                                room.AdjacentHallways.FirstOrDefault(h => h.OppositeRoom(room).Y == room.Y + 1);
+
+                            Console.Write($"   {bottomHallway}    ");
+                        } else
+                        {
+                            Console.Write("   |    ");
+                        }
+                    }
+
+                    Console.Write(Environment.NewLine);
+                }
             }
             Console.ReadLine();
         }
