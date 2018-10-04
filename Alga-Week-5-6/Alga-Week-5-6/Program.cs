@@ -18,7 +18,7 @@ namespace Alga_Week_5_6
 
             Dungeon dungeon = new Dungeon(int.Parse(x), int.Parse(y));
 
-            Console.ReadLine();
+            dungeon.Print();
         }
     }
 }

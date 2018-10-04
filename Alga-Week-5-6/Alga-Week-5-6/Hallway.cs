@@ -22,16 +22,14 @@ namespace Alga_Week_5_6
             this._exit = exit;
         }
 
-        public Room MoveThrough(Room currentRoom)
+        public Room OppositeRoom(Room currentRoom)
         {
-            if (_entrance == currentRoom)
-            {
-                return _exit;
-            }
-            else
-            {
-                return _entrance;
-            }
+            return _entrance == currentRoom ? _exit : _entrance;
+        }
+
+        public override string ToString()
+        {
+            return EnemyLevel.ToString();
         }
     }
 }

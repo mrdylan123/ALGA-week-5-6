@@ -9,19 +9,21 @@ namespace Alga_Week_5_6
     public class Room
     {
         public ISet<Hallway> AdjacentHallways { get; set; }
-        private int _x;
-        private int _y;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public bool IsStart { get; set; }
+        public bool IsEnd { get; set; }
 
         public Room(int x, int y)
         {
-            _x = x;
-            _y = y;
+            X = x;
+            Y = y;
             AdjacentHallways = new HashSet<Hallway>();
         }
 
         public override string ToString()
         {
-            return $"{_x},{_y}";
+            return IsStart ? "S" : IsEnd ? "E" : "X";
         }
     }
 }
