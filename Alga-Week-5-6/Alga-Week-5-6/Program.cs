@@ -10,12 +10,13 @@ namespace Alga_Week_5_6
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Geef een 'x' en 'y'");
+            Console.WriteLine("Geef een 'x'");
+            string x = Console.ReadLine();
 
-            String input = Console.ReadLine();
-            string[] inputXY = input.Split(' ');
-            Dungeon dungeon = new Dungeon(int.Parse(inputXY[0]), int.Parse(inputXY[1]));
+            Console.WriteLine("Geef een 'y'");
+            string y = Console.ReadLine();
 
+            Dungeon dungeon = new Dungeon(int.Parse(x), int.Parse(y));
 
             Console.ReadLine();
         }
