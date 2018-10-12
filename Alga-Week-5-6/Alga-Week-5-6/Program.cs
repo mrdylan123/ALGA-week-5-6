@@ -19,6 +19,12 @@ namespace Alga_Week_5_6
             Dungeon dungeon = new Dungeon(int.Parse(x), int.Parse(y));
 
             dungeon.Print();
+
+            dungeon.HandGrenade();
+
+            //Console.WriteLine($"Aantal stappen naar het einde: {dungeon.MagicTalisman()}");
+
+            dungeon.Print();
         }
     }
 }

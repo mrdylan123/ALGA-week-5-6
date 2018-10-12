@@ -13,6 +13,7 @@ namespace Alga_Week_5_6
         public int Y { get; set; }
         public bool IsStart { get; set; }
         public bool IsEnd { get; set; }
+        public bool Visited { get; set; }
 
         public Room(int x, int y)
         {
@@ -23,7 +24,12 @@ namespace Alga_Week_5_6
 
         public override string ToString()
         {
-            return IsStart ? "S" : IsEnd ? "E" : "X";
+            if (IsStart || IsEnd)
+            {
+                return IsStart ? "S" : "E";
+            }
+
+            return Visited ? "*" : "X";
         }
     }
 }
