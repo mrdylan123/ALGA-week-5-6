@@ -20,8 +20,9 @@ namespace Alga_Week_5_6
 
             dungeon.Print();
 
-            dungeon.HandGrenade();
+            //dungeon.HandGrenade();
 
+            dungeon.SilverCompass();
             //Console.WriteLine($"Aantal stappen naar het einde: {dungeon.MagicTalisman()}");
 
             dungeon.Print();

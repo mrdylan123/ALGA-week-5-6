@@ -105,24 +105,29 @@ namespace Alga_Week_5_6
         {
             ISet<Room> visitedRooms = new HashSet<Room>();
             List<Hallway> hallwaysToCollapse = new List<Hallway>();
+            List<Hallway> hallwaysToScan = new List<Hallway>();
+            List<Tree> roomTreeList = new List<Tree>();
+            
 
-            // Copy list of hallways into hallwaysToCollapse
+            // Copy list of hallways into hallwaysToCollapse and hallwaysToScan
             foreach (Hallway hallway in _hallways)
             {
                 hallwaysToCollapse.Add(hallway);
+                hallwaysToScan.Add(hallway);
             }
 
-            while (visitedRooms.Count != _width * _height)
+            for (int i = 0; i < _hallways.Count; i++)
             {
                 // Find the weakest hallway
                 Hallway weakestHallway = null;
 
-                foreach (Hallway hallway in hallwaysToCollapse)
+                foreach (Hallway hallway in hallwaysToScan)
                 {
                     if (weakestHallway == null || hallway.EnemyLevel < weakestHallway.EnemyLevel)
                         weakestHallway = hallway;
                 }
 
+                // Check if one or both rooms have been visited from this hallway
                 bool entranceVisited = visitedRooms.Contains(weakestHallway.Entrance);
                 bool exitVisited = visitedRooms.Contains(weakestHallway.Exit);
 
@@ -132,9 +137,41 @@ namespace Alga_Week_5_6
                 if (!exitVisited)
                     visitedRooms.Add(weakestHallway.Exit);
 
-                // Remove the hallway to collapse if one of the rooms has not been visited
-                if (entranceVisited || exitVisited)
+                if (!entranceVisited && !exitVisited)
+                {
+                    // Neither have been visited, create a new tree with these two rooms
+                    Tree tree = new Tree(weakestHallway.Entrance);
+                    tree.AddChild(weakestHallway.Exit);
+                    roomTreeList.Add(tree);
                     hallwaysToCollapse.Remove(weakestHallway);
+                }
+                else if (!entranceVisited)
+                {
+                    Tree tree = roomTreeList.First(t => t.GetChild(weakestHallway.Exit) != null).GetChild(weakestHallway.Exit);
+                    tree.AddChild(weakestHallway.Entrance);
+                    hallwaysToCollapse.Remove(weakestHallway);
+                }
+                else if (!exitVisited)
+                {
+                    Tree tree = roomTreeList.First(t => t.GetChild(weakestHallway.Entrance) != null).GetChild(weakestHallway.Entrance);
+                    tree.AddChild(weakestHallway.Exit);
+                    hallwaysToCollapse.Remove(weakestHallway);
+                }
+                // Both rooms have been visited, check if their trees are already connected
+                else
+                {
+                    Tree entranceTree = roomTreeList.First(t => t.GetChild(weakestHallway.Entrance) != null);
+                    Tree exitTree = roomTreeList.First(t => t.GetChild(weakestHallway.Exit) != null);
+                    if (entranceTree != exitTree)
+                    {
+                        // The trees are not connected, so merge these and remove one from the list
+                        hallwaysToCollapse.Remove(weakestHallway);
+                        entranceTree.AddTree(exitTree);
+                        roomTreeList.Remove(exitTree);
+                    }
+                }
+                // Remove the hallway from the list of hallways to be scanned
+                hallwaysToScan.Remove(weakestHallway);
             }
 
             foreach (Hallway hallway in hallwaysToCollapse)
@@ -147,6 +184,104 @@ namespace Alga_Week_5_6
             IEnumerable<Hallway> notCollapsedHallways = _startRoom.AdjacentHallways.Where(h => !h.IsCollapsed);
             int randomDefeatedRoom = random.Next(notCollapsedHallways.Count());
             notCollapsedHallways.ElementAt(randomDefeatedRoom).EnemyLevel = 0;
+        }
+
+        public void SilverCompass()
+        {
+            List<Room> rooms = new List<Room>();
+
+            foreach (Room r in _rooms)
+            {
+                rooms.Add(r);
+            }
+
+            _startRoom.Distance.ShortestDistance = 0;
+
+            while (rooms.Any())
+            {
+                Room shortestDistanceRoom = null;
+
+                foreach (Room room in rooms)
+                {
+                    if (shortestDistanceRoom == null ||
+                        room.Distance.ShortestDistance < shortestDistanceRoom.Distance.ShortestDistance)
+                    {
+                        shortestDistanceRoom = room;
+                    }
+                }
+
+                rooms.Remove(shortestDistanceRoom);
+
+                if (shortestDistanceRoom != _endRoom)
+                {
+                    IEnumerable<Hallway> adjacentHallwaysToCheck = shortestDistanceRoom.AdjacentHallways
+                        .Where(h => rooms.Contains(h.OppositeRoom(shortestDistanceRoom)));
+
+                    foreach (Hallway hallway in adjacentHallwaysToCheck)
+                    {
+                        int totalDistance = shortestDistanceRoom.Distance.ShortestDistance +
+                                            hallway.EnemyLevel;
+
+                        if (totalDistance < hallway.OppositeRoom(shortestDistanceRoom).Distance.ShortestDistance)
+                        {
+                            hallway.OppositeRoom(shortestDistanceRoom).Distance.ShortestDistance = totalDistance;
+                            hallway.OppositeRoom(shortestDistanceRoom).Distance.FromRoom = shortestDistanceRoom;
+                        }
+                    }
+                }
+                else
+                {
+
+                }
+            }
+        }
+
+        public void SilverCompass2()
+        {
+            Room currentRoom = _startRoom;
+            currentRoom.Distance.ShortestDistance = 0;
+
+            while (currentRoom != _endRoom)
+            {
+                Hallway weakestHallway = null;
+
+                IEnumerable<Hallway> notVisitedHallways = currentRoom.AdjacentHallways.Where(h =>
+                    h.OppositeRoom(currentRoom).Distance.ShortestDistance == int.MaxValue);
+
+                foreach (Hallway h in notVisitedHallways)
+                {
+                    Room DestinationRoom = h.OppositeRoom(currentRoom);
+
+                    // Backtrack to previously visited rooms and add up the total distance
+                    int totalDistance = h.EnemyLevel;
+                    Room backtrackRoom = currentRoom;
+
+                    while (backtrackRoom.Distance.FromRoom != null)
+                    {
+                        totalDistance += backtrackRoom.Distance.ShortestDistance;
+                        backtrackRoom = backtrackRoom.Distance.FromRoom;
+                    }
+
+                    // If a shorter path than the destination room has been found, set that distance
+                    if (totalDistance < DestinationRoom.Distance.ShortestDistance)
+                    {
+                        DestinationRoom.Distance.FromRoom = currentRoom;
+                        DestinationRoom.Distance.ShortestDistance = totalDistance;
+                    }
+
+                    if (weakestHallway == null || h.EnemyLevel < weakestHallway.EnemyLevel)
+                        weakestHallway = h;
+                }
+
+                currentRoom = weakestHallway.OppositeRoom(currentRoom);
+            }
+
+            // Shortest path has been found to the endroom, now backtrack to the start so the path can be printed
+            while (currentRoom != _startRoom)
+            {
+                currentRoom.Visited = true;
+                currentRoom = currentRoom.Distance.FromRoom;
+            }
         }
 
         public void Print()

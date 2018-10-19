@@ -14,12 +14,14 @@ namespace Alga_Week_5_6
         public bool IsStart { get; set; }
         public bool IsEnd { get; set; }
         public bool Visited { get; set; }
+        public Distance Distance { get; set; }
 
         public Room(int x, int y)
         {
             X = x;
             Y = y;
             AdjacentHallways = new HashSet<Hallway>();
+            Distance = new Distance();
         }
 
         public override string ToString()

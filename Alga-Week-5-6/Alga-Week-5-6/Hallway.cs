@@ -13,7 +13,7 @@ namespace Alga_Week_5_6
         public Room Exit { get; set; }
         public bool IsCollapsed { get; set; }
 
-        private static readonly Random random = new Random();
+        private static readonly Random random = new Random(2);
 
         public Hallway(Room entrance, Room exit)
         {
