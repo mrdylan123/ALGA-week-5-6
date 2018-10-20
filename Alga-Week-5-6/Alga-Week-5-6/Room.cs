@@ -24,6 +24,13 @@ namespace Alga_Week_5_6
             Distance = new Distance();
         }
 
+        public void Reset()
+        {
+            Visited = false;
+            Distance.FromRoom = null;
+            Distance.ShortestDistance = int.MaxValue;
+        }
+
         public override string ToString()
         {
             if (IsStart || IsEnd)

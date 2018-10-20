@@ -20,12 +20,57 @@ namespace Alga_Week_5_6
 
             dungeon.Print();
 
-            //dungeon.HandGrenade();
+            string command = Console.ReadLine();
 
-            dungeon.SilverCompass();
-            //Console.WriteLine($"Aantal stappen naar het einde: {dungeon.MagicTalisman()}");
+            while (command != "exit")
+            {
+                switch (command)
+                {
+                    case "talisman": dungeon.MagicTalisman();
+                        break;
+                    case "handgranaat": dungeon.HandGrenade();
+                        break;
+                    case "kompas": dungeon.SilverCompass();
+                        break;
+                    case "maaklastiger": dungeon.MakeShortestPathDifficult();
+                        break;
+                }
 
-            dungeon.Print();
+                try
+                {
+                    if (command.Contains("startx"))
+                    {
+                        int startX = int.Parse(command.Split(' ')[1]);
+                        dungeon.SetStartLocation(x: startX);
+                    }
+
+                    if (command.Contains("starty"))
+                    {
+                        int startY = int.Parse(command.Split(' ')[1]);
+                        dungeon.SetStartLocation(y: startY);
+                    }
+
+                    if (command.Contains("eindx"))
+                    {
+                        int endX = int.Parse(command.Split(' ')[1]);
+                        dungeon.SetEndLocation(x: endX);
+                    }
+
+                    if (command.Contains("eindy"))
+                    {
+                        int endY = int.Parse(command.Split(' ')[1]);
+                        dungeon.SetEndLocation(y: endY);
+                    }
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    Console.WriteLine("De ingevoerde waarde valt buiten het speelveld.");
+                }
+                
+                dungeon.Print();
+
+                command = Console.ReadLine();
+            }
         }
     }
 }
